@@ -12,7 +12,7 @@ const app = fastify({ logger: true });
 const PORT = Number(process.env.PORT) || 3000;
 
 const start = async () => {
-  // Register Swagger with all schemas defined here
+  // Register Swagger with all schemas
   await app.register(swagger, {
     swagger: {
       info: {
@@ -39,23 +39,9 @@ const start = async () => {
   await app.register(associationsRoutes);
 
   await connectDB();
-  await sequelize.sync({ force: true });
+  await sequelize.sync();
 
-  app.get("/", {
-    schema: {
-      description: 'Welcome endpoint',
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            message: { type: 'string' }
-          }
-        }
-      }
-    }
-  }, async () => {
-    return { message: "Welcome to the Fastify + Sequelize CRUD API" };
-  });
+  app.get("/", async () => ({ message: "Welcome to the Fastify + Sequelize CRUD API" }));
 
   try {
     await app.listen({ port: PORT });
