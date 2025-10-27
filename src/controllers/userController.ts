@@ -36,3 +36,17 @@ export const deleteUser = async (req: FastifyRequest, reply: FastifyReply) => {
   if (!deleted) return reply.status(404).send(failure("User not found"));
   reply.send(success("User deleted"));
 };
+
+//for bulk user creation
+export const bulkCreateUsers = async (req: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const users = req.body as any[];
+    if (!Array.isArray(users)) {
+      return reply.code(400).send(failure("Payload must be an array of users"));
+    }
+    const created = await userService.bulkCreateUsers(users);
+    reply.send(success("Users created successfully", created));
+  } catch (err: any) {
+    reply.status(500).send(failure("Error creating users", err));
+  }
+};

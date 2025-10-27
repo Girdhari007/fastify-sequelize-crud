@@ -4,26 +4,67 @@ import { connectDB, sequelize } from "./config/db";
 import { userRoutes } from "./routes/userRoutes";
 import { addressRoutes } from "./routes/addressRoutes";
 import { associationsRoutes } from "./routes/associations";
+import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 
 dotenv.config();
 const app = fastify({ logger: true });
 const PORT = Number(process.env.PORT) || 3000;
 
-app.register(userRoutes);
-app.register(addressRoutes);
-app.register(associationsRoutes);
-
 const start = async () => {
+  // Register Swagger with all schemas defined here
+  await app.register(swagger, {
+    swagger: {
+      info: {
+        title: 'Fastify API',
+        version: '1.0.0'
+      },
+      consumes: ['application/json'],
+      produces: ['application/json']
+    }
+  });
+
+  // Register Swagger UI
+  await app.register(swaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: false
+    }
+  });
+
+  // Register route plugins
+  await app.register(userRoutes);
+  await app.register(addressRoutes);
+  await app.register(associationsRoutes);
+
   await connectDB();
   await sequelize.sync({ force: true });
 
-  app.get("/", async () => {
+  app.get("/", {
+    schema: {
+      description: 'Welcome endpoint',
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
+      }
+    }
+  }, async () => {
     return { message: "Welcome to the Fastify + Sequelize CRUD API" };
   });
 
-  app.listen({ port: PORT }, () => {
+  try {
+    await app.listen({ port: PORT });
     console.log(`Server running at http://localhost:${PORT}`);
-  });
+    console.log(`API Documentation available at http://localhost:${PORT}/docs`);
+  } catch (err) {
+    console.error('Error starting server:', err);
+    process.exit(1);
+  }
 };
 
 start();

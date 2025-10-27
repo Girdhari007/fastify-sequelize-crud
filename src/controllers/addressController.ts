@@ -38,3 +38,16 @@ export const deleteAddress = async (req: FastifyRequest, reply: FastifyReply) =>
   if (!deleted) return reply.status(404).send(failure("Address not found"));
   reply.send(success("Address deleted"));
 };
+//for bulk address creation
+export const bulkCreateAddresses = async (req: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const addresses = req.body as any[];
+    if (!Array.isArray(addresses)) {
+      return reply.code(400).send(failure("Payload must be an array of addresses"));
+    }
+    const created = await addressService.bulkCreateAddresses(addresses);
+    reply.send(success("Addresses created successfully", created));
+  } catch (err: any) {
+    reply.status(500).send(failure("Error creating addresses", err));
+  }
+};

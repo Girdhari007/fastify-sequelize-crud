@@ -16,3 +16,8 @@ export const deleteUser = async (id: number) => {
   await user.destroy();
   return true;
 };
+
+//for bulk user creation
+export const bulkCreateUsers = async (users: any[]) => {
+  return User.bulkCreate(users);
+};

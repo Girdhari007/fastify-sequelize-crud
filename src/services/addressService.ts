@@ -15,3 +15,7 @@ export const deleteAddress = async (id: number) => {
   await address.destroy();
   return true;
 };
+//for bulk address creation
+export const bulkCreateAddresses = async (addresses: any[]) => {
+  return Address.bulkCreate(addresses);
+};
