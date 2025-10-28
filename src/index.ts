@@ -10,6 +10,7 @@ import swaggerUi from "@fastify/swagger-ui";
 dotenv.config();
 const app = fastify({ logger: true });
 const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.DB_HOST || "localhost";
 
 const start = async () => {
   // Register Swagger with all schemas
@@ -44,9 +45,9 @@ const start = async () => {
   app.get("/", async () => ({ message: "Welcome to the Fastify + Sequelize CRUD API" }));
 
   try {
-    await app.listen({ port: PORT });
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`API Documentation available at http://localhost:${PORT}/docs`);
+    await app.listen({ port: PORT, host: HOST });
+    console.log(`Server running at http://${HOST}:${PORT}`);
+    console.log(`API Documentation available at http://${HOST}:${PORT}/docs`);
   } catch (err) {
     console.error('Error starting server:', err);
     process.exit(1);
