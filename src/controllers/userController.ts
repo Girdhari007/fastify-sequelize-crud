@@ -11,11 +11,13 @@ export const createUser = async (req: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
+// Get all users
 export const getUsers = async (_req: FastifyRequest, reply: FastifyReply) => {
   const users = await userService.getAllUsers();
   reply.send(success("Users fetched successfully", users));
 };
 
+// Get user by ID
 export const getUser = async (req: FastifyRequest, reply: FastifyReply) => {
   const { id } = req.params as any;
   const user = await userService.getUserById(id);
@@ -30,6 +32,7 @@ export const updateUser = async (req: FastifyRequest, reply: FastifyReply) => {
   reply.send(success("User updated", updated));
 };
 
+// Delete user
 export const deleteUser = async (req: FastifyRequest, reply: FastifyReply) => {
   const { id } = req.params as any;
   const deleted = await userService.deleteUser(id);
@@ -37,7 +40,7 @@ export const deleteUser = async (req: FastifyRequest, reply: FastifyReply) => {
   reply.send(success("User deleted"));
 };
 
-//for bulk user creation
+// Bulk create users
 export const bulkCreateUsers = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const users = req.body as any[];
