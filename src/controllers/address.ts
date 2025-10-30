@@ -14,7 +14,7 @@ export const createAddress = async (req: FastifyRequest, reply: FastifyReply) =>
 export const getAddresses = async (req: FastifyRequest, reply: FastifyReply) => {
   const { pincode } = req.query as any;
   const filter = pincode ? { pincode } : {};
-  const addresses = await addressService.getAllAddresses(filter);
+  const addresses = await addressService.getAllAddresses();
   reply.send(success("Addresses fetched", addresses));
 };
 
