@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as addressService from "../services/addressService";
+import * as addressService from "../services/address";
 import { success, failure } from "../utils/response";
 
 export const createAddress = async (req: FastifyRequest, reply: FastifyReply) => {

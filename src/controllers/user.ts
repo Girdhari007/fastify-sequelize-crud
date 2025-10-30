@@ -1,7 +1,24 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as userService from "../services/userService";
+import * as userService from "../services/user";
+import * as userAddress from "../services/user";
+
 import { success, failure } from "../utils/response";
 
+//user with addresses
+export const getUserAddress = async (_req: FastifyRequest, reply: FastifyReply) => {
+  const users = await userAddress.getAllUserAddress();
+  if (!users) return reply.status(404).send(failure("User addresses not found"));
+  reply.send(success("Users fetched successfully", users));
+};
+
+export const getUserAddressByID = async (req: FastifyRequest, reply: FastifyReply) => {
+  const { id } = req.params as any;
+  const user = await userAddress.getUserAddressById(id);
+  if (!user) return reply.status(404).send(failure("User address not found"));
+  reply.send(success("User address fetched", user));
+};
+
+// Create a user
 export const createUser = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
     const user = await userService.createUser(req.body);
@@ -13,8 +30,12 @@ export const createUser = async (req: FastifyRequest, reply: FastifyReply) => {
 
 // Get all users
 export const getUsers = async (_req: FastifyRequest, reply: FastifyReply) => {
-  const users = await userService.getAllUsers();
-  reply.send(success("Users fetched successfully", users));
+  try {
+    const users = await userService.getAllUsers();
+    reply.send(success("Users fetched successfully", users));
+  } catch (err) {
+    return reply.status(404).send(failure("Error fetching users", err));
+  }
 };
 
 // Get user by ID

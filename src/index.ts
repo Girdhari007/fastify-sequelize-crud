@@ -1,9 +1,8 @@
 import fastify from "fastify";
 import dotenv from "dotenv";
 import { connectDB, sequelize } from "./config/db";
-import { userRoutes } from "./routes/userRoutes";
-import { addressRoutes } from "./routes/addressRoutes";
-import { associationsRoutes } from "./routes/associations";
+import { userRoutes, associationsRoutes } from "./routes/user";
+import { addressRoutes } from "./routes/address";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 
@@ -30,14 +29,14 @@ const start = async () => {
     routePrefix: '/docs',
     uiConfig: {
       docExpansion: 'list',
-      deepLinking: false
+
     }
   });
 
   // Register route plugins
   await app.register(userRoutes);
-  await app.register(addressRoutes);
   await app.register(associationsRoutes);
+  await app.register(addressRoutes);
 
   await connectDB();
   await sequelize.sync();
@@ -46,8 +45,8 @@ const start = async () => {
 
   try {
     await app.listen({ port: PORT });
-    console.log(`Server running at http://${HOST}:${PORT}`);
-    console.log(`API Documentation available at http://${HOST}:${PORT}/docs`);
+    console.log(`✌️ Server running at http://${HOST}:${PORT}`);
+    console.log(`✌️ API Documentation available at http://${HOST}:${PORT}/docs`);
   } catch (err) {
     console.error('Error starting server:', err);
     process.exit(1);
