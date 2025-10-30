@@ -37,7 +37,7 @@ export const addressResponseSchema = z.object({
     updatedAt: z.string().datetime().optional(),
 });
 
-// Response Schemas with `success` / `message`
+// Response Schemas
 export const createAddressResponseSchema = z.object({
     success: z.boolean(),
     message: z.string(),
@@ -65,7 +65,7 @@ export const updateAddressResponseSchema = z.object({
 export const deleteAddressResponseSchema = z.object({
     success: z.boolean(),
     message: z.string(),
-    data: z.null(), // when deleted, you return data: null
+    data: z.null(),
 });
 
 export const createAddressesBatchResponseSchema = z.object({
